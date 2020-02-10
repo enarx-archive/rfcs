@@ -16,7 +16,7 @@ packages into a prepared Keep.
 
 Once a Keep is prepared with microkernel, WASM runtime, etc., the
 workload (WASM binary + data) needs to be loaded into it.  A
-description is required.
+description of the loading sequence is required.
 
 ## Tutorial
 
