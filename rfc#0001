@@ -62,8 +62,8 @@ Some TEE implementations assume trust in the host system.  This is explicitly ex
 1. What should the well-known port number be?  Should we use HTTPS (443) or another?
 
 Out of scope:
-1. Keep preparation steps.
-1. Workload package format.
+1. Keep preparation steps: requires RFC.
+1. Workload package format: requires RFC.
 
 ## Implementations
 
