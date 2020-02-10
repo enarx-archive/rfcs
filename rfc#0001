@@ -23,7 +23,7 @@ For this design to work, a route between the ECA and the Keep control plane need
 
 One of the Enarx project's design principles is that all network and storage connections in and out of a Keep are encrypted.  In the case of network connections, this usually means that the session is encrypted using TLS (or dTLS), but since we may not have established any certificates in the Keep at this point, it cannot act as the server.  However, as the workload provisioning encryption key (WPEK) has already been communicated to the Keep, if the workload can be decrypted using this key, this assures the Keep that it is communicating with the ECA, or at least an entity in the same trust domain, so identity has been confirmed.
 
-There are possible use cases where a Keep might wish to cache a copy of the workload, either for reloading ("recycling" a Keep) or to transfer to another Keep in the same trust domain.  This caching, if under the origincal WPEK, is at the expense of Perfect Forward Secrecy.  If a Keep is to transfer the workload to another Keep in the same domain, it MAY encrypt it under a new WPEK.  If the original is used, it will need to established in the new Keep either at provisioning time (e.g. by the ECA) or at a later date through key negotiation.  Such functionality is considered risky, as the key management required is difficult to get right, and provides new options for compromise or design/implementation errors.  Any design of such functionality requires a new RFC.
+There are possible use cases where a Keep might wish to cache a copy of the workload, either for reloading ("recycling" a Keep) or to transfer to another Keep in the same trust domain.  This caching, if under the origincal WPEK, is at the expense of Perfect Forward Secrecy.  If a Keep is to transfer the workload to another Keep in the same domain, it MAY encrypt it under a new WPEK.  If the original is used, it will need to established in the new Keep either at provisioning time (e.g. by the ECA) or at a later date through key negotiation.  Such functionality is considered risky, as the key management required is difficult to get right, and provides new options for compromise or design/implementation errors.  Any design of such functionality requires a new RFC (see "Future possibilities" below).
 
 The Keep MUST NOT accept unencrypted workloads, as there is no way to verify their provenance.
 The Keep SHOULD listen on a well-known port (see "Unresolved questions").
@@ -62,8 +62,8 @@ Some TEE implementations assume trust in the host system.  This is explicitly ex
 1. What should the well-known port number be?  Should we use HTTPS (443) or another?
 
 Out of scope:
-1. Keep preparation steps: requires RFC.
-1. Workload package format: requires RFC.
+1. Keep preparation steps: requires RFC - issue #228.
+1. Workload package format: requires RFC - issue #227.
 
 ## Implementations
 
