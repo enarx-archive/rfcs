@@ -9,29 +9,78 @@
 
 ## Summary
 
-This RFC describes the architecture adopted by Enarx for loading WASM packages into a prepared Keep. 
+This RFC describes the architecture adopted by Enarx for loading WASM
+packages into a prepared Keep. 
 
 ## Motivation
 
-Once a Keep is prepared with microkernel, WASM runtime, etc., the workload (WASM binary + data) needs to be loaded into it.  A description is required.
+Once a Keep is prepared with microkernel, WASM runtime, etc., the
+workload (WASM binary + data) needs to be loaded into it.  A
+description is required.
 
 ## Tutorial
 
-A Keep is the fundamental runtime component of Enarx: a TEE instance + Enarx runtime pieces, including WebAssembly and WASI layers.  In order for it to execute a workload, the WASM (WebAssembly) package that comprises it (binary/binaries + data elements) need to be loaded into it.  This is sent to it by the Enarx client agent (ECA), encrypted under a session key established at Keep provisioning time, and communicated to the ECA - the workload provisioning encryption key (WPEK).  The Keep has an agent running which is listening on a well-known port, or on a port number previously established during the Keep preparation phase.  The ECA connects to this port, and establishes a connection to the Keep.  The Keep takes the workload, decrypts it, and runs it.
+A Keep is the fundamental runtime component of Enarx: a TEE instance
++ Enarx runtime pieces, including WebAssembly and WASI layers.  In
+order for it to execute a workload, the WASM (WebAssembly) package
+that comprises it (binary/binaries + data elements) need to be loaded
+into it.  This is sent to it by the Enarx client agent (ECA),
+encrypted under a session key established at Keep provisioning time,
+and communicated to the ECA - the workload provisioning encryption
+key (WPEK).  The Keep has an agent running which is listening on a
+well-known port, or on a port number previously established during
+the Keep preparation phase.  The ECA connects to this port, and
+establishes a connection to the Keep.  The Keep takes the workload,
+decrypts it, and runs it.
 
-For this design to work, a route between the ECA and the Keep control plane needs to be available.  Note that this does not necessarily need to be direct: since an encrypted connection is not explicitly required (see below), proxying is possible.  This could, if required, be via an (untrusted) service on the host.
+For this design to work, a route between the ECA and the Keep control
+plane needs to be available.  Note that this does not necessarily
+need to be direct: since an encrypted connection is not explicitly
+required (see below), proxying is possible.  This could, if required,
+be via an (untrusted) service on the host.
 
-One of the Enarx project's design principles is that all network and storage connections in and out of a Keep are encrypted.  In the case of network connections, this usually means that the session is encrypted using TLS (or dTLS), but since we may not have established any certificates in the Keep at this point, it cannot act as the server.  However, as the workload provisioning encryption key (WPEK) has already been communicated to the Keep, if the workload can be decrypted using this key, this assures the Keep that it is communicating with the ECA, or at least an entity in the same trust domain, so identity has been confirmed.
+One of the Enarx project's design principles is that all network
+and storage connections in and out of a Keep are encrypted.  In the
+case of network connections, this usually means that the session is
+encrypted using TLS (or dTLS), but since we may not have established
+any certificates in the Keep at this point, it cannot act as the
+server.  However, as the workload provisioning encryption key (WPEK)
+has already been communicated to the Keep, if the workload can be
+decrypted using this key, this assures the Keep that it is
+communicating with the ECA, or at least an entity in the same trust
+domain, so identity has been confirmed.
 
-There are possible use cases where a Keep might wish to cache a copy of the workload, either for reloading ("recycling" a Keep) or to transfer to another Keep in the same trust domain.  This caching, if under the origincal WPEK, is at the expense of Perfect Forward Secrecy.  If a Keep is to transfer the workload to another Keep in the same domain, it MAY encrypt it under a new WPEK.  If the original is used, it will need to established in the new Keep either at provisioning time (e.g. by the ECA) or at a later date through key negotiation.  Such functionality is considered risky, as the key management required is difficult to get right, and provides new options for compromise or design/implementation errors.  Any design of such functionality requires a new RFC (see "Future possibilities" below).
+There are possible use cases where a Keep might wish to cache a copy
+of the workload, either for reloading ("recycling" a Keep) or to
+transfer to another Keep in the same trust domain.  This caching, if
+under the origincal WPEK, is at the expense of Perfect Forward
+Secrecy.  If a Keep is to transfer the workload to another Keep in
+the same domain, it MAY encrypt it under a new WPEK.  If the
+original is used, it will need to established in the new Keep either
+at provisioning time (e.g. by the ECA) or at a later date through
+key negotiation.  Such functionality is considered risky, as the key
+management required is difficult to get right, and provides new
+options for compromise or design/implementation errors.  Any design
+of such functionality requires a new RFC (see "Future possibilities"
+below).
 
-The Keep MUST NOT accept unencrypted workloads, as there is no way to verify their provenance.
-The Keep SHOULD listen on a well-known port (see "Unresolved questions").
-If a port has been pre-esablished, the Keep MUST listen on this port, and MAY also listen on the well-known port.
-The Keep MAY cache the workload for re-use, or transfer to another Keep.  If a Keep allows workloads to be used by another Keep, the workload MAY be encrypted under a new WPEK, established between the original Keep and new Keep.
-Keeps MAY be implemented to enable the capability to performing workload caching.
-Enabling of the capability for a Keep to perform caching MUST be at the discretion of the ECA or entities within the ECA's trust domain.
-Enabling of the capability for a Keep to perform caching MUST NOT be at the discretion of the host.  The host MUST NOT be able to enable caching.
+The Keep MUST NOT accept unencrypted workloads, as there is no way
+to verify their provenance.
+The Keep SHOULD listen on a well-known port (see "Unresolved
+questions").
+If a port has been pre-esablished, the Keep MUST listen on this port,
+and MAY also listen on the well-known port.
+The Keep MAY cache the workload for re-use, or transfer to another
+Keep.  If a Keep allows workloads to be used by another Keep, the
+workload MAY be encrypted under a new WPEK, established between the
+original Keep and new Keep.
+Keeps MAY be implemented to enable the capability to performing
+workload caching.
+Enabling of the capability for a Keep to perform caching MUST be at
+the discretion of the ECA or entities within the ECA's trust domain.
+Enabling of the capability for a Keep to perform caching MUST NOT
+be at the discretion of the host.  The host MUST NOT be able to
+enable caching.
 
 ## Reference
 
@@ -45,21 +94,33 @@ Why should we *not* do this?
 
 Alternatives considered:
 
-Enarx client agent encrypts workload, sends to CPU/firmware via Enarx host agent. CPU/firmware decrypts workload, loads into Keep. This has the advantage that we use an existing network connection, and there's no need to establish a connection nor a session key between the Keep and the client agent.
+Enarx client agent encrypts workload, sends to CPU/firmware via Enarx
+host agent. CPU/firmware decrypts workload, loads into Keep. This has
+the advantage that we use an existing network connection, and there's
+no need to establish a connection nor a session key between the Keep
+and the client agent.
 Rejected: this is not supported by all architectures.
 
-Enarx client agent encrypts workload, sends to host agent. Host agent sends to Keep via a listening agent in the Keep. Keep decrypts, loads and runs. This maintains the host agent's status as a proxy between other components, and doesn't make further assumptions about routing which is made by 2. 
+Enarx client agent encrypts workload, sends to host agent. Host agent
+sends to Keep via a listening agent in the Keep. Keep decrypts, loads
+and runs. This maintains the host agent's status as a proxy between
+other components, and doesn't make further assumptions about routing
+which is made by 2. 
 Rejected:
 - the host agent should not need logic to provide functionality.
 - maintaining multiple versions is complex.
 
 ## Prior art
 
-Some TEE implementations assume trust in the host system.  This is explicitly excluded as one of the Enarx project's design principles.  In such implementations, a component trusted by the host system may handle key management and decryption/loading of the workload.
+Some TEE implementations assume trust in the host system.  This is
+explicitly excluded as one of the Enarx project's design principles.
+In such implementations, a component trusted by the host system may
+handle key management and decryption/loading of the workload.
 
 ## Unresolved questions
 
-1. What should the well-known port number be?  Should we use HTTPS (443) or another?
+1. What should the well-known port number be?  Should we use HTTPS
+(443) or another?
 
 Out of scope:
 1. Keep preparation steps: requires RFC - issue #228.
@@ -73,4 +134,7 @@ No implementation yet available (2020-02-10).
 
 Caching designs should be considered under a new RFC.
 
-There are opportunities for "pre-warmed" Keeps, which are provisioned ahead of use time, and whose WPEK is not necessarily derived from the initial session key established between the ECA and the waiting Keep.  Designs for such should be under a new RFC.
+There are opportunities for "pre-warmed" Keeps, which are provisioned
+ahead of use time, and whose WPEK is not necessarily derived from the
+initial session key established between the ECA and the waiting Keep.
+Designs for such should be under a new RFC.
