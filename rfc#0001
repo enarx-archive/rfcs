@@ -9,20 +9,20 @@
 
 ## Summary
 
-This RFC describes the architecture adopted by Enarx for loading WASM
+This RFC describes the architecture adopted by Enarx for loading Wasm
 packages into a prepared Keep. 
 
 ## Motivation
 
-Once a Keep is prepared with microkernel, WASM runtime, etc., the
-workload (WASM binary + data) needs to be loaded into it.  A
-description is required.
+Once a Keep is prepared with microkernel, Wasm runtime, etc., the
+tenant workload (Wasm binary + data) needs to be loaded into it.  A
+description of the loading sequence is required.
 
 ## Tutorial
 
 A Keep is the fundamental runtime component of Enarx: a TEE instance
 + Enarx runtime pieces, including WebAssembly and WASI layers.  In
-order for it to execute a workload, the WASM (WebAssembly) package
+order for it to execute a workload, the Wasm (WebAssembly) package
 that comprises it (binary/binaries + data elements) need to be loaded
 into it.  This is sent to it by the Enarx client agent (ECA),
 encrypted under a session key established at Keep provisioning time,
@@ -56,7 +56,7 @@ transfer to another Keep in the same trust domain.  This caching, if
 under the origincal WPEK, is at the expense of Perfect Forward
 Secrecy.  If a Keep is to transfer the workload to another Keep in
 the same domain, it MAY encrypt it under a new WPEK.  If the
-original is used, it will need to established in the new Keep either
+original is used, it will need to be established in the new Keep either
 at provisioning time (e.g. by the ECA) or at a later date through
 key negotiation.  Such functionality is considered risky, as the key
 management required is difficult to get right, and provides new
@@ -84,7 +84,7 @@ enable caching.
 
 ## Reference
 
-Empty.
+This RFC arose from this issue: [Workload (WASM binary) loading - connection termination](https://github.com/enarx/enarx/issues/140)
 
 ## Drawbacks
 
