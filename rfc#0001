@@ -84,7 +84,8 @@ enable caching.
 
 ## Reference
 
-This RFC arose from this issue: [Workload (WASM binary) loading - connection termination](https://github.com/enarx/enarx/issues/140)
+This RFC arose from this issue: [Workload (WASM binary) loading
+- connection termination](https://github.com/enarx/enarx/issues/140)
 
 ## Drawbacks
 
