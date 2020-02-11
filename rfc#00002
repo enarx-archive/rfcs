@@ -1,0 +1,148 @@
+# Title (Ex. 00002: Trust domain)
+- Authors: [Mike Bursell](you@github-email)
+- Status: [PROPOSED](/README.md#proposed)
+- Since: 2020-02-13
+- Status Note: under discussion
+- Start Date: 2020-02-11 (date you started working on this idea)
+- Tags: trust
+
+## Summary
+
+Trust domains are a key concept within Enarx.  This RFC provides an
+introduction to trust domains.
+
+## Motivation
+
+In order to explain the motivations behind Enarx, our design principles
+and aims, we need to be able to explain what trust domains are.  This RFC
+attempts to provide an introduction.
+
+## Tutorial
+
+A definition of trust, from [What is trust?](http://aliceevebob.com/2017/05/09/what-is-trust-with-apologies-to-pontius-pilate/).
+
+"Trust is the assurance that one entity holds that another will
+perform particular actions according to a specific expectation."
+First corollary: "Trust is always contextual."
+Second corollary: "One of the contexts for trust is always time."
+Third corollary: "Trust relationships are not symmetrical."
+
+### Applying this to Enarx
+The key trust relationship for Enarx is that held by the tenant
+(workload owner) to that workload.  Enarx aims to provide assurances to
+the tenant that the integrity and confidentiality of that workload are
+protected: these are the key contexts of that trust, and actions can be
+assured if they are maintained.  Trust may decay or be built up in the
+workload - the time context.  In this case, the workload does not have an
+equivalent set of assurances about the tenant, so the relationship is
+not symmetrical.
+
+### Trust domains
+A trust domain can be defined as a set of entities or components that
+share the same security policies.  These may be human or machine, but
+machine entities are usually assumed, and are what are relevant to Enarx.
+We can refer to these entities as members of a trust docmain.  Trust
+domains can be subsets or supersets of other trust domains, but may not
+intersect: a true intersection between two trust domains implies that
+they share the same policies, which means that they are in union.
+
+Members of trust domain, by definition, trust each other to perform
+particular actions - typically to provide particular services.  Trust
+relationships within a trust domain can be considered flat and equal,
+even if different components provide separate services.  All
+interactions between trust domains - or from any external entity to
+a trust domain - should occur across well-defined interfaces, preferably
+to well-defined specifications.
+
+            -00000-
+
+Explain the proposal as if it were already implemented and you
+were teaching it to another Enarx contributor or user. That generally
+means:
+
+- Introducing new named concepts.
+- Explaining the feature largely in terms of examples.
+- Explaining how Enarx contributors and/or users should *think* about the
+feature, and how it should impact the way they would use Enarx.
+- If applicable, provide sample error messages, deprecation warnings, or
+migration guidance.
+
+Some RFCs may be more aimed at contributors (e.g consensus on internals);
+others may be more aimed at users.
+
+## Reference
+
+Provide guidance for implementers, procedures to inform testing,
+interface definitions, formal function prototypes, error codes,
+diagrams, and other technical details that might be looked up.
+Strive to guarantee that:
+
+- Interactions with other features are clear.
+- Implementation trajectory is well defined.
+- Corner cases are dissected by example.
+
+## Drawbacks
+
+Why should we *not* do this?
+
+## Rationale and alternatives
+
+- Why is this design the best in the space of possible designs?
+- What other designs have been considered and what is the rationale for not
+choosing them?
+- What is the impact of not doing this?
+
+## Prior art
+
+Discuss prior art, both the good and the bad, in relation to this proposal.
+A few examples of what this can include are:
+
+- Does this feature exist in other TEE-based systems and what experience have
+their community had?
+- For other teams: What lessons can we learn from other attempts?
+- Papers: Are there any published papers or great posts that discuss this?
+If you have some relevant papers to refer to, this can serve as a more detailed
+theoretical background.
+
+This section is intended to encourage you as an author to think about the
+lessons from other implementers, provide readers of your proposal with a
+fuller picture. If there is no prior art, that is fine - your ideas are
+interesting to us whether they are brand new or if they are an adaptation
+from other communities.
+
+Note that while precedent set by other communities is some motivation, it
+does not on its own motivate an RFC here.
+
+## Unresolved questions
+
+- What parts of the design do you expect to resolve through the
+RFC process before this gets merged?
+- What parts of the design do you expect to resolve through the
+implementation of this feature before stabilization?
+- What related issues do you consider out of scope for this 
+proposal that could be addressed in the future independently of the
+solution that comes out of this doc?
+
+## Implementations
+
+If your proposal is related to code and you have a early implementation,
+mention it here and link to it.
+
+## Future Possibilities
+
+Think about what the natural extension and evolution of your proposal
+would be and how it would affect the project as a whole. Try to use
+this section as a tool to more fully consider all possible interactions
+with the project in your proposal. Also consider how the this all fits
+into the roadmap for the project and of the relevant sub-team.
+
+This is also a good place to "dump ideas", if they are out of scope for
+the RFC you are writing but otherwise related.
+
+If you have tried and cannot think of any future possibilities, you may
+simply state that you cannot think of anything.
+
+Note that having something written down in the future-possibilities
+section is not a reason to accept the current or a future RFC; such
+notes should be in the section on motivation or rationale in this or
+subsequent RFCs. The section merely provides additional information.
