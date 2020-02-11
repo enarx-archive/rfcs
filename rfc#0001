@@ -120,8 +120,8 @@ handle key management and decryption/loading of the workload.
 
 ## Unresolved questions
 
-1. What should the well-known port number be?  Should we use HTTPS
-(443) or another?
+1. What should the well-known port number be?  Note that a number
+above 1024 may make life a little easier (non-root binding).
 
 Out of scope:
 1. Keep preparation steps: requires RFC - issue #228.
