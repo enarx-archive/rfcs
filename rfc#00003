@@ -45,24 +45,141 @@ be the same for this description)
 and compromised processes)
 - man-in-the-middle entities
 Clearly, the first two are the key actors - the others are included for
-reference (though a threat model is not defined here).
+reference (no threat model is not defined here).
 
 The following components are defined:
 - host 
 - host CPU + CPU firmware
 - Orchestrator (e.g. Kubernetes, Openshift, Openstack)
+- Tenant workload image
+- Tenant workload image repository
 - Enarx client agent (ECA)
 - Enarx host agent (EHA)
+- Enarx runtime image
 - TEE instance
 - Empty Keep
 - Provisioned Keep
 - Tenant workload
+- Other workloads
 Not all of these exist at all points in the process.
 
 
+### Non-Enarx-enabled use case states
+In the non-TEE-assisted case, all processes running on the host are in
+the host's trust domain (this assumes no compromised processes).  We
+ignore man-in-the-middle entities.  For the default trust domain model,
+we assume that the Orchestrator is operated by the tenant and that the
+Tenant workload image repository is also operated by the tenant.
+
+#### State 0 non-Enarx-enabled use case (initial)
+No Enarx-related components are relevant to this use case.
+- host owner trust domain
+  - host
+  - host CPU + CPU firmware
+  - Other workloads
+- tenant trust domain
+  - Orchestrator
+  - Tenant workload image
+  - Tenant workload image repository
+
+Note - there are models where a trust relationship is maintained by
+the tenant to the Tenant workload image repository or to the tenant
+workload, but it is not directly within the trust domain.  These
+models are not examined in this document.
+
+#### State 1 non-Enarx-enabled use case (provisioned)
+- host owner trust domain
+  - host
+  - host CPU + CPU firmware
+  - Tenant workload
+  - Other workloads
+- tenant trust domain
+  - Orchestrator
+  - Tenant workload image
+  - Tenant workload image repository
+The change from state 0 to 1 is the provisioning of the Tenant workload
+onto the host from the Tenant workload image.
+
+The key point of this use case from a trust domain point of view it that
+since the host has access to all processes and associated memory that are
+running on it, all workloads that run on the host can only exist within
+the host trust domain.
+
+### Enarx use case states
+Note that exact state details may vary by implementation.
+
+#### State 0 Enarx use case (initial state)
+Initial state (we assume no compromised processes on host):
+- host owner trust domain
+  - host
+  - host CPU + CPU firmware
+  - Enarx host agent
+  - Enarx runtime image
+  - Other workloads
+- tenant trust domain
+  - Orchestrator
+  - Enarx client agent
+  - Enarx runtime image
+  - Tenant workload image
+  - Tenant workload image repository
+This is the same as the initial state for the non-Enarx-enabled
+use case.
+
+#### State 1 Enarx use case (TODO: check name - pre-attestation)
+- host owner trust domain
+  - host
+  - host CPU + CPU firmware
+  - Enarx host agent
+  - TEE instance
+  - Enarx runtime image (within TEE instance)
+  - Other workloads
+- tenant trust domain
+  - Orchestrator
+  - Enarx client agent
+  - Tenant workload image
+  - Tenant workload image repository
+The state change from 0 to one creates a TEE instance and loads
+the Enarx runtime image into it.
+
+#### State 2 Enarx use case (TODO: check name - attested)
+- host owner trust domain
+  - host
+  - host CPU + CPU firmware
+  - Enarx host agent
+  - Other workloads
+- tenant trust domain
+  - Orchestrator
+  - Enarx client agent
+  - Empty Keep
+  - Tenant workload image
+  - Tenant workload image repository
+The state change from 1 to 2 moves the Empty Keep into the tenant
+trust domain.
+
+#### State 3 Enarx use case (TODO: check name - provisioned)
+- host owner trust domain
+  - host
+  - host CPU + CPU firmware
+  - Enarx host agent
+  - Other workloads
+- tenant trust domain
+  - Orchestrator
+  - Enarx client agent
+  - Provisioned Keep
+  - Tenant workload image
+  - Tenant workload image repository
+The state change from 2 to 3 provisions the tenant workload into
+the (previously empty) Keep.
+
 
 ### Applications and trust domains in Enarx
-
+It may be that the tenant workload, once running, should not
+continue to exist in the top-level tenant trust domain, but may
+be moved into a sub-domain, or even transferred to another owner or
+tenant.  Such chances are application-level: the key aim of Enarx,
+from a trust domain point of view, is to allow the provisioning of
+workloads by a tenant into their own trust domain, rather than the
+host trust domain.
 
 ## Reference
 
@@ -82,13 +199,7 @@ n/a
 
 ## Unresolved questions
 
-- What parts of the design do you expect to resolve through the
-RFC process before this gets merged?
-- What parts of the design do you expect to resolve through the
-implementation of this feature before stabilization?
-- What related issues do you consider out of scope for this 
-proposal that could be addressed in the future independently of the
-solution that comes out of this doc?
+n/a
 
 ## Implementations
 
@@ -99,3 +210,4 @@ None.
 - Threat models should be documented and published as RFCs (Issue #240)[https://github.com/enarx/enarx/issues/240]
 - Status of hardware/firmware in trust relationships in Enarx
 needs to be documented (Issue #193)[https://github.com/enarx/enarx/issues/193]
+- Further trust models could be defined beyond the default one presented here.
