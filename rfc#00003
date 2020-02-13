@@ -115,7 +115,7 @@ Initial state (we assume no compromised processes on host):
   - Enarx host agent
   - Enarx runtime image
   - Other workloads
-- tenant trust domain
+- Tenant trust domain
   - Orchestrator
   - Enarx client agent
   - Tenant workload image
