@@ -124,7 +124,7 @@ This is the same as the initial state for the non-Enarx-enabled
 use case, with the exception of the Enarx components.
 
 #### State 1 Enarx use case (TODO: check name - pre-attestation)
-- host owner trust domain
+- Host owner trust domain
   - host
   - host CPU + CPU firmware
   - Enarx host agent
