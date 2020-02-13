@@ -142,7 +142,7 @@ the Enarx runtime image into it.
 #### State 2 Enarx use case (TODO: check name - attested)
 - Host owner trust domain
   - Host
-  - host CPU + CPU firmware
+  - Host CPU + CPU firmware
   - Enarx host agent
   - Other workloads
 - tenant trust domain
