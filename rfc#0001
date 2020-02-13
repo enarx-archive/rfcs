@@ -31,7 +31,7 @@ The Keep has an agent running which is listening on a
 well-known port, or on a port number previously established during
 the Keep preparation phase.  The ECA connects to this port, and
 establishes a connection to the Keep.  The Keep takes the workload,
-decrypts it, and runs it.
+decrypts it with the WPEK, and runs it.
 
 For this design to work, a route between the ECA and the Keep control
 plane needs to be available.  Note that this does not necessarily
