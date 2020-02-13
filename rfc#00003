@@ -111,7 +111,7 @@ Note that exact state details may vary by implementation.
 Initial state (we assume no compromised processes on host):
 - host owner trust domain
   - Host
-  - host CPU + CPU firmware
+  - Host CPU + CPU firmware
   - Enarx host agent
   - Enarx runtime image
   - Other workloads
