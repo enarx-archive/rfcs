@@ -10,7 +10,7 @@
 ## Summary
 
 This RFC describes the architecture adopted by Enarx for loading Wasm
-packages into a prepared Keep. 
+packages into a prepared Keep using a secure channel. 
 
 ## Motivation
 
