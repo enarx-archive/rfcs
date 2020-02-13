@@ -92,7 +92,7 @@ models are not examined in this document.
   - Host CPU + CPU firmware
   - Tenant workload
   - Other workloads
-- tenant trust domain
+- Tenant trust domain
   - Orchestrator
   - Tenant workload image
   - Tenant workload image repository
