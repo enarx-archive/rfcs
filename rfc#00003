@@ -126,7 +126,7 @@ use case, with the exception of the Enarx components.
 #### State 1 Enarx use case (TODO: check name - pre-attestation)
 - Host owner trust domain
   - Host
-  - host CPU + CPU firmware
+  - Host CPU + CPU firmware
   - Enarx host agent
   - TEE instance
   - Enarx runtime image (within TEE instance)
