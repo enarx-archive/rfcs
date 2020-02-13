@@ -22,7 +22,7 @@ description of the loading sequence is required.
 
 A Keep is the fundamental runtime component of Enarx: a TEE instance
 + Enarx runtime pieces, including WebAssembly and WASI layers.  In
-order for it to execute a workload, the Wasm (WebAssembly) package
+order for the Keep to execute a workload, the Wasm (WebAssembly) package
 that comprises it (binary/binaries + data elements) need to be loaded
 into it.  This is sent to it by the Enarx client agent (ECA),
 encrypted under a session key established at Keep provisioning time,
