@@ -109,7 +109,7 @@ Note that exact state details may vary by implementation.
 
 #### State 0 Enarx use case (initial state)
 Initial state (we assume no compromised processes on host):
-- host owner trust domain
+- Host owner trust domain
   - Host
   - Host CPU + CPU firmware
   - Enarx host agent
