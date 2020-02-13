@@ -118,11 +118,10 @@ Initial state (we assume no compromised processes on host):
 - tenant trust domain
   - Orchestrator
   - Enarx client agent
-  - Enarx runtime image
   - Tenant workload image
   - Tenant workload image repository
 This is the same as the initial state for the non-Enarx-enabled
-use case.
+use case, with the exception of the Enarx components.
 
 #### State 1 Enarx use case (TODO: check name - pre-attestation)
 - host owner trust domain
@@ -138,7 +137,7 @@ use case.
   - Tenant workload image
   - Tenant workload image repository
 The state change from 0 to one creates a TEE instance and loads
-the Enarx runtime image into it.
+the Enarx runtime image into it.  
 
 #### State 2 Enarx use case (TODO: check name - attested)
 - host owner trust domain
@@ -153,7 +152,8 @@ the Enarx runtime image into it.
   - Tenant workload image
   - Tenant workload image repository
 The state change from 1 to 2 moves the Empty Keep into the tenant
-trust domain.
+trust domain.  The TEE instance has transformed into a Keep as
+it has been loaded with the Enarx runtime agent and attested.
 
 #### State 3 Enarx use case (TODO: check name - provisioned)
 - host owner trust domain
