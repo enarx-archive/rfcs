@@ -34,8 +34,9 @@ the tenant that the integrity and confidentiality of that workload are
 protected: these are the key contexts of that trust, and actions can be
 assured if they are maintained.  Trust may decay or be built up in the
 workload - the time context.  In this case, the workload does not have an
-equivalent set of assurances about the tenant, so the relationship is
-not symmetrical.
+equivalent set of assurances about the tenant's integrity and
+confidentiality, so the relationship if there were one, would not be
+symmetrical.
 
 ### Trust domains
 A trust domain can be defined as a set of entities or components that
