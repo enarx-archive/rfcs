@@ -175,7 +175,7 @@ the (previously empty) Keep.
 It may be that the tenant workload, once running, should not
 continue to exist in the top-level tenant trust domain, but may
 be moved into a sub-domain, or even transferred to another owner or
-tenant.  Such chances are application-level: the key aim of Enarx,
+tenant.  Such changes are application-level: the key aim of Enarx,
 from a trust domain point of view, is to allow the provisioning of
 workloads by a tenant into their own trust domain, rather than the
 host trust domain.
