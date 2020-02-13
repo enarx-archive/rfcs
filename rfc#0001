@@ -55,7 +55,7 @@ of the workload, either for reloading ("recycling" a Keep) or to
 transfer to another Keep in the same trust domain.  This caching, if
 under the origincal WPEK, is at the expense of Perfect Forward
 Secrecy.  If a Keep is to transfer the workload to another Keep in
-the same domain, it MAY encrypt it under a new WPEK.  If the
+the same domain, the original Keep MAY encrypt the workload under a new WPEK.  If the
 original WPEK is used, that WPEK will need to be established in the new Keep either
 at provisioning time (e.g. by the ECA) or at a later date through
 key negotiation.  Such functionality is considered risky, as the key
