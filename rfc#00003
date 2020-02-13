@@ -131,7 +131,7 @@ use case, with the exception of the Enarx components.
   - TEE instance
   - Enarx runtime image (within TEE instance)
   - Other workloads
-- tenant trust domain
+- Tenant trust domain
   - Orchestrator
   - Enarx client agent
   - Tenant workload image
