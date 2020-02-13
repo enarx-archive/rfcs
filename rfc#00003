@@ -14,9 +14,8 @@ introduction to trust domains in Enarx.
 
 ## Motivation
 
-In order to explain the motivations behind Enarx, our design principles
-and aims, we need to be able to explain what trust domains are.  This RFC
-attempts to provide an introduction.
+This RFC takes the introduction around trust domains in RFC#00002, and
+applies it to Enarx.
 
 ## Tutorial
 
@@ -45,7 +44,7 @@ be the same for this description)
 and compromised processes)
 - man-in-the-middle entities
 Clearly, the first two are the key actors - the others are included for
-reference (no threat model is not defined here).
+reference (no threat model is defined here).
 
 The following components are defined:
 - host 
