@@ -24,9 +24,11 @@ A Keep is the fundamental runtime component of Enarx: a TEE instance
 + Enarx runtime pieces, including WebAssembly and WASI layers.  In
 order for the Keep to execute a workload, the Wasm (WebAssembly) package
 that comprises the workload (binary/binaries + data elements) need to be loaded
-into the Keep.  This workload is sent to the Keep by the Enarx client agent (ECA),
-encrypted under a session key (the workload provisioning encryption key or WPEK) that is established at Keep provisioning time
-and communicated to the ECA.
+into the Keep.  This workload is sent to the Keep by the Enarx client agent
+(ECA), encrypted under a session key (the workload provisioning encryption
+key or WPEK) that is established at Keep provisioning time and
+communicated to the ECA.
+
 The Keep has an agent running which is listening on a
 well-known port, or on a port number previously established during
 the Keep preparation phase.  The ECA connects to this port, and
@@ -108,8 +110,10 @@ and runs. This maintains the host agent's status as a proxy between
 other components, and doesn't make further assumptions about routing
 which is made by 2. 
 Rejected:
-- the host agent should not need logic to provide functionality.
-- maintaining multiple versions is complex.
+- the host agent should act as an untrusted proxy wherever possible,
+and not include process logic.
+- maintaining multiple versions of host agents is complex from
+a deployment point of view.
 
 ## Prior art
 
