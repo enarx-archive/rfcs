@@ -50,7 +50,7 @@ server.  However, as the workload provisioning encryption key (WPEK)
 has already been communicated to the Keep, if the workload can be
 decrypted using this key, this assures the Keep that it is
 communicating with the ECA, or at least an entity in the same trust
-domain, so identity has been confirmed.
+domain, so tenant identity has been confirmed.
 
 There are possible use cases where a Keep might wish to cache a copy
 of the workload, either for reloading ("recycling" a Keep) or to
