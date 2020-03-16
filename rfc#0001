@@ -91,7 +91,7 @@ This RFC arose from this issue: [Workload (WASM binary) loading
 
 ## Drawbacks
 
-Why should we *not* do this?
+No drawbacks currently known. Furthermore, this mechanism is core functionality to Enarx.
 
 ## Rationale and alternatives
 
