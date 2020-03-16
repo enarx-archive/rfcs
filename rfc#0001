@@ -128,7 +128,7 @@ handle key management and decryption/loading of the workload.
 above 1024 may make life a little easier (non-root binding).
 
 Out of scope:
-1. Keep preparation steps: requires RFC - issue #228.
+1. Keep preparation steps: requires RFC - issue #16.
 1. Workload package format: requires RFC - issue #227.
 
 ## Implementations
