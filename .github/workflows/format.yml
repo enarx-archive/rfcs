@@ -1,11 +1,11 @@
-name: tests
+name: format
 
 on: [pull_request]
 
 jobs:
-  success:
+  name:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: true
-      run: true
+    - name: name
+      run: .tests/format-name
