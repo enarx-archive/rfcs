@@ -46,14 +46,34 @@ endorsing authority allows trustors to assume trust in a system
 in which the anchor is contained.  Trust anchors are static in
 terms of their interaction with a trust system, and the trust
 relationship to a trust anchor is assumed - based on the endorsing
-authority - rather than derived.  One exampele of a trust anchor
+authority - rather than derived.  One example of a trust anchor
 is a root certificate signed by a Certificate Authority (the
 endorsing authority in this case).
 
 ### Trust pivot
-A trust pivot is a component which allows a trust relationship
-from one entity to another to be transferred, or added, to another
-entity.  The validity of the pivot assumes the existence of one or more trust anchors.
+A trust pivot is a component (or set of components) and associated
+process (that is, algorithm, rather than necessarily executing
+process) which allows a trust relationship from one entity to
+another to be transferred, or added, to another entity.  The
+validity of the pivot assumes the existence of one or more trust
+anchors.  The concept of a trust pivot is new, and two
+examples may help explain it.
+
+#### A will as a trust pivot
+A will (as in "last will and testament") provides a legal
+mechanism whereby the ownership and management of property can
+be passed from one person to another.  (Note: "Trusts" are
+another mechanism, but the name is somewhat confusing in this
+context!).
+
+#### A CPU+firmware as a trust pivot of a TEE
+Most relevant to Enarx is the use of TEE-enabled CPU+firmware and
+an attestation process to allow a TEE instance to pivot from one
+trust domain (the host's) to another (the workload owner's).  An
+example of a trust anchor in this case is the cryptographic
+key or certificate which the CPU+firmware component uses to sign
+aspects of the attestation.
+
 
 ## Reference
 
