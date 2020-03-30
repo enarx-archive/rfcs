@@ -13,8 +13,13 @@ match($0, /^[a-z-]+\/([0-9]{5})-[a-z0-9-]+\/README.md$/, grp) {
     next
 }
 
+# Allow some RFC-specific files
+/^[a-z-]+\/([0-9]{5})-[a-z0-9-]+\/[a-z0-9-]+.(png|svg)$/ {
+    next
+}
+
 {
-    printf "%s is formatted incorrectly!\n", $0
+    printf "%s is an unexpected filename!\n", $0
     status=1
 }
 
