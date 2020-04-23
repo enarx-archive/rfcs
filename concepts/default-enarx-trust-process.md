@@ -9,13 +9,15 @@
 
 TODO: this is curently listed as a "concepts" document, but also
 includes design information and implementation requirements.  Need
-to decide where it best sits.
+to decide where it best sits.  Neither "concepts" nor "features"
+(as described in the README.md) fit very well.
 
 ## Summary
 
 Setting up trust domains and being able to transfer certain entities
 between them in central to Enarx.  This RFC describes the default
-trust process for Enarx.
+trust process for Enarx and lays out sets of requirements for
+implementations.
 
 ## Motivation
 
@@ -38,18 +40,18 @@ involved and mentioned in this document, it is not the document's focus.
 
 ## Trust state transitions in Enarx
 
-See rfc#00002 for an introduction to trust relationships.
-See rfc#00003 for an introduction to trust domains and their application
+See rfc#0000x for an introduction to trust relationships.
+See rfc#0000x for an introduction to trust domains and their application
 to Enarx.
-See rfc#00006 for an introduction to endorsing authorities, trust anchors
+See rfc#0000x for an introduction to endorsing authorities, trust anchors
 and trust pivots.
 
-rfc#00003 described the following Enarx use case states for the default
-Enarx trust model (TODO: check correctness in rfc#00003 and normalise):
- * State 0 - initial state
- * State 1 - pre-attestation
- * State 2 - attested
- * State 3 - provisioned
+rfc#0000x described the following Enarx use case states for the default
+Enarx trust model (TODO: check correctness in rfc#0000x and normalise):
+ - State 0 - initial state
+ - State 1 - pre-attestation
+ - State 2 - attested
+ - State 3 - provisioned
 
 Non-Enarx use cases were also discussed, but these are irrelevant to this
 discussion, and therefore ignored in this RFC.
@@ -67,36 +69,52 @@ to allow designers, coders, documenters, testers, auditors and users of
 the project to have as full an understanding of the process and
 architecture as possible.
 
+### How the trust domain change happens
+The key state change in terms of the Enarx default trust model is from
+state 1 to state 2.  It is at this point that at **TEE instance** on the
+host (and in the **host owner's trust domain**), loaded with an **Enarx
+runtime image** (which then executes, to become an **Enarx runtime
+instance**) becomes an **Empty Keep**, within the **tenant trust domain**.
+This is achieved by the use of a __trust pivot__: the **host CPU + CPU
+firmware**.  The attestation process described in the State 1->2 change
+section explicitly notes that that cryptographic identity of the **host
+CPU + CPU firmware** must be validated as part of the attestation
+measurement check process.
+
+The ability for the tenant to trust the host CPU + CPU firmware underpins
+the entire trust model process, and it is vital that all implementations
+check it very carefully.
+
 ### State 0->1 change
 
 #### State 0 - initial state
 
- * host owner trust domain
-    * host
-    * host CPU + CPU firmware
-    * Enarx host agent
-    * Enarx runtime image
-    * Other workloads
- * tenant trust domain
-    * Orchestrator
-    * Enarx client agent
-    * Tenant workload image
-    * Tenant workload image repository
+ - host owner trust domain
+    - host
+    - host CPU + CPU firmware
+    - Enarx host agent
+    - Enarx runtime image
+    - Other workloads
+ - tenant trust domain
+    - Orchestrator
+    - Enarx client agent
+    - Tenant workload image
+    - Tenant workload image repository
 
 #### State 1
 
- * host owner trust domain
-    * host
-    * host CPU + CPU firmware
-    * Enarx host agent
-    * **TEE instance**
-    * **Enarx runtime image (within TEE instance)**
-    * Other workloads
- * tenant trust domain
-    * Orchestrator
-    * Enarx client agent
-    * Tenant workload image
-    * Tenant workload image repository
+ - host owner trust domain
+    - host
+    - host CPU + CPU firmware
+    - Enarx host agent
+    - **TEE instance**
+    - **Enarx runtime instance (within TEE instance)**
+    - Other workloads
+ - tenant trust domain
+    - Orchestrator
+    - Enarx client agent
+    - Tenant workload image
+    - Tenant workload image repository
 
 #### Changes
 
@@ -106,12 +124,12 @@ and the loading of the Enarx runtime image into that instance.
 The initialisation of the process is prompted by **Orchestrator**, which
 communicates with the **Enarx client agent**, which contacts the **Enarx
 host agent** over a network connection (which does not need to be
-encrypted).  Mechanism (such as a cryptographic nonce), allowing the
+encrypted).  A mechanism (such as a cryptographic nonce), allowing the
 Enarx client agent to match sessions and requests, is included in the
 initial request.  The **Enarx host agent** then requests the creation,
 which is performed by the **host CPU + CPU firmware**.
 
-The Enarx runtime image is typically stored on host storage (local or
+The **Enarx runtime image** is typically stored on host storage (local or
 remote - the distinction is not relevant to the process).  The loading
 process varies between architectures (TODO: is this true?), but is
 requested by the **Enarx host agent**.  Although the initial image may
@@ -119,61 +137,74 @@ persist on host storage, there is no requirement for or against this,
 and so the component is not listed separately in state 1.  We follow
 this convention for later states.
 
+Once the **TEE instance** has been created, the **host CPU + CPU firmware**
+load the **Enarx runtime image** into the **TEE instance**.  The
+**Enarx runtime image**, now loaded, is executed, and becomes the
+**Enarx runtime instance**, though it is not yet attested.
+
+As part of the initialisation process, the **Orchestrator** provides the
+**Enarx client agent** with one of the following:
+ 1. access to the **Tenant workload image repository** and a reference to
+ **Tenant workload image** to be provisioned;
+ 2. direct access to the **Tenant workload image**, either as a binary in
+ memory or in storage;
+ 3. a reference allowing the **Enarx client agent** to recontact the
+ **Orchestrator** in the event of successful attestation.
+ 
 Though the encryption of the channel between the Enarx client agent
 and the Enarx host agent is not **required**, the following properties are
-considered to be *desirable*:
+considered to be **desirable**:
 
- * authentication of the Enarx client agent to the Enarx host agent
-   * this allows the host to control which parties are permitted to create
+ - authentication of the Enarx client agent to the Enarx host agent
+   - this allows the host to control which parties are permitted to create
    Enarx Keeps.  While this has no direct benefit to the tenant, an
    indirect benefit may be that the host can avoid DoS attacks, thereby
    maintaining availability for workload placement and execution.
-   * note that the Enarx host agent is *not* trusted by the tenant, and
+   - note that the Enarx host agent is *not* trusted by the tenant, and
    it is therefore the responsibility of the host to decide whether to
    trust any such authentication.
- * integrity of the request
-   * some DoS attacks or protocol attacks may be feasible, and mitigated
+ - integrity of the request
+   - some DoS attacks or protocol attacks may be feasible, and mitigated
    by integrity protection.
- * encryption of the protocol handshake and further steps
-   * some attacks based around protocol versioning or replays may be
+ - encryption of the protocol handshake and further steps
+   - some attacks based around protocol versioning or replays may be
    feasible, and can be avoided by encryption.
 
 For the reasons noted above, encrypting the channel will sometimes be considered
 the simplest option.
 
 
-
 ### State 1->2 change
 
 #### State 1 - pre-attestation
 
- * host owner trust domain
-    * host
-    * host CPU + CPU firmware
-    * Enarx host agent
-    * TEE instance
-    * Enarx runtime image (within TEE instance)
-    * Other workloads
- * tenant trust domain
-    * Orchestrator
-    * Enarx client agent
-    * Tenant workload image
-    * Tenant workload image repository
+ - host owner trust domain
+    - host
+    - host CPU + CPU firmware
+    - Enarx host agent
+    - TEE instance
+    - Enarx runtime instance (within TEE instance)
+    - Other workloads
+ - tenant trust domain
+    - Orchestrator
+    - Enarx client agent
+    - Tenant workload image
+    - Tenant workload image repository
 
 
 #### State 2 - attested
 
- * host owner trust domain
-    * host
-    * host CPU + CPU firmware
-    * Enarx host agent
-    * Other workloads
- * tenant trust domain
-    * Orchestrator
-    * Enarx client agent
-    * **Empty Keep**
-    * Tenant workload image
-    * Tenant workload image repository
+ - host owner trust domain
+    - host
+    - host CPU + CPU firmware
+    - Enarx host agent
+    - Other workloads
+ - tenant trust domain
+    - Orchestrator
+    - Enarx client agent
+    - **Empty Keep**
+    - Tenant workload image
+    - Tenant workload image repository
 
 #### Changes
 
@@ -187,12 +218,13 @@ CPU + CPU firmware**.  The measurement is then transmitted from the
 **Enarx host agent** to the **Enarx client agent**.
 
 The **Enarx host agent** checks the attestation measurement database
-(defined in a separate RFC) to ensure that the attestation measurement is
-correct.  This process includes checks for:
+(TODO: defined in a separate RFC) to ensure that the attestation
+measurement is correct.  This process includes checks for:
 
- * cryptographic correctness
- * TEE correctness
- * valid Enarx runtime image.
+ - host CPU + CPU firmware validity
+ - cryptographic correctness
+ - TEE validity
+ - valid Enarx runtime image.
 
 If any of these checks fail, the state progression is stopped, and the
 **Enarx client agent** logs an error and may send an error message to
@@ -203,48 +235,129 @@ If the attestation measurement meets the checking criteria, the **Enarx
 client agent** retrieves or derives the session key from the previous
 communication (the exact mechanism being CPU architecture-dependent).  At
 this point, the state transition is considered complete, and the TEE
-instance, loaded with the Enarx runtime image, is now an **Empty Keep**.
+instance, loaded with the Enarx runtime image, is now an **Empty Keep**,
+which includes a running **Enarx runtime instance**. 
 
 ### State 2->3 change
 
 #### State 2 - pre-attestation
 
- * host owner trust domain
-    * host
-    * host CPU + CPU firmware
-    * Enarx host agent
-    * Other workloads
- * tenant trust domain
-    * Orchestrator
-    * Enarx client agent
-    * **Empty Keep**
-    * Tenant workload image
-    * Tenant workload image repository
+ - host owner trust domain
+    - host
+    - host CPU + CPU firmware
+    - Enarx host agent
+    - Other workloads
+ - tenant trust domain
+    - Orchestrator
+    - Enarx client agent
+    - **Empty Keep**
+    - Tenant workload image
+    - Tenant workload image repository
 
 #### State 3 - attested
 
- * host owner trust domain
-    * host
-    * host CPU + CPU firmware
-    * Enarx host agent
-    * Other workloads
- * tenant trust domain
-    * Orchestrator
-    * Enarx client agent
-    * **Provisioned Keep**
-    * Tenant workload image
-    * Tenant workload image repository
+ - host owner trust domain
+    - host
+    - host CPU + CPU firmware
+    - Enarx host agent
+    - Other workloads
+ - tenant trust domain
+    - Orchestrator
+    - Enarx client agent
+    - **Provisioned Keep**
+    - Tenant workload image
+    - Tenant workload image repository
 
 
 #### Changes
 
+The change between state 2 and state 3 is the loading of the **Tenant
+Workload Image** into the **Empty Keep**, turning it into a **Provisioned
+Keep**.
+
+During the state 0->1 change transition, the **Orchestrator** provided the
+**Enarx client agent** with one of the following:
+ 1. access to the **Tenant workload image repository** and a reference to
+ **Tenant workload image** to be provisioned;
+ 2. direct access to the **Tenant workload image**, either as a binary in
+ memory or in storage;
+ 3. a reference allowing the **Enarx client agent** to recontact the
+ **Orchestrator** in the event of successful attestation.
+
+The **Enarx client agent** now requires access to the **Tenant workload
+image**.
+
+ - In the case of 1. above, the **Enarx client agent** now exercises its
+ access to the **Tenant workload image repository** and retrieves the
+ **Tenant workload image**.
+ - In the case of 2. above, the **Enarx client agent** already has access
+ to the **Tenant workload image**.
+ - In the case of 3. above, the **Enarx client agent** contacts the
+ **Orchestrator**, providing attestation measurement check status
+ information, and receives the **Tenant workload image** from the
+ **Orchestrator**.  Note that explicit approval should be included in the
+ communication to allow the **Orchestrator** to check that the message is
+ a "success" and not a "failure": this is a measure to reduce sensitive
+ information leakage in the event of implementation errors.
 
 
-TODO NOW: Encrypt, send.  Note comms channel properties this time.
-TODO NOW: When does the workload get to the ECA?
+The **Enarx client agent** gained access to a session key as part of the
+state 1->2 transition.  The **Tenant workload image** must be encrypted
+under this session key to be transmitted to the **Empty Keep**.
+
+TODO: check this - particularly authentication pieces.
+At some point in the process (undefined in this document), the **Enarx
+client agent** was provided with sufficient information to contact what is
+now the **Empty Keep**.  This may have been via set-up information from
+the **Orchestrator**, as part of the communications with the **Enarx host
+agent**, or via "call-back" from the **Empty Keep**: in the latter case,
+the **Enarx client agent** must be certain (through cryptographic
+authentication) that the **Empty Keep** is the expected entity.  This may
+be achieved by the injection of authentication material into the **Empty
+Keep** at provision-time, but this must then be tied to the attestation
+measurement, and unique to each **Empty Keep** instance.  The session key
+established in the state 1->2 transition may be sufficient for this
+purpose.
+
+The **Enarx client agent** now creates an encrypted communications channel
+to the **Empty Keep**, using the session key established in the state 1->2
+transition.  The **Empty Keep** will be listening for a network connection,
+and once the encrypted communications channel is set up, the **Enarx client
+agent** transmits the **Tenant workload image** to the **Empty Keep**.  The
+**Empty Keep** receives the **Tenant workload image**, and instantiates it
+as a full workload.  This completes the transition of the **Empty Keep** to
+a **Provisioned Keep**.
 
 
 ## Requirements
+### General requirements
+TODO: these requirements seem general to the project, and probably
+deserve their own RFC.  
+
+The security of the tenant (workload owner) MUST always be considered
+paramount when considering designs and implementations of Enarx
+components, protocols or other artifacts.
+
+When a trade-off between the security of the tenant and workload needs
+to be made against the security of any other party (including host owner),
+the security of the tenant MUST always win.
+
+When measures for a party other than the tenant are being considered,
+the general principle should be to choose the highest levels of security,
+but any choices MUST NOT compromise tenant security. 
+
+The Tenant Workload MUST never be unencrypted on the network (in transit)
+within the Enarx-managed process.
+
+The Tenant Workload MUST never be unencrypted in storage once it has been
+transmitted by the Enarx client agent.
+
+The Tenant Workload MUST never be unencrypted in RAM once it has been
+transmitted by the Enarx client agent.
+
+The Tenant Workload MUST never be available in unencrypted form on the host.
+
+### Other requirements
 The channel between the Enarx client agent and the Enarx host agent MAY be
 encrypted.
 
@@ -280,6 +393,12 @@ All Enarx client agent logs SHOULD be integrity protected.
 All attestation measurement failures MUST result in a cessation of
 the standard state progression.
 
+The cryptographic validity of the host CPU + CPU firmware MUST be
+checked in every attestation measurement check.
+
+All cryptographic validity check failures of the host CPU + CPU firmware
+MUST result in an attestation failure.
+
 The cessation of the standard state progression before transmission of
 the tenant workload MUST result in non-transmission of the workload from
 the Enarx client agent to any component on the host.
@@ -297,11 +416,34 @@ The session tracking information MUST be included in all communications
 between the Enarx client agent and the Enarx host agent until the Keep
 is fully provisioned.
 
+The Tenant Workload MUST never be unencrypted on the network (in transit)
+within the Enarx-managed process.
+
+The Tenant Workload MUST never be unencrypted in storage once it has been
+transmitted by the Enarx client agent.
+
+The Tenant Workload MUST never be unencrypted in RAM once it has been
+transmitted by the Enarx client agent.
+
+The Tenant Workload MUST never be available in unencrypted form on the host.
+
+The Enarx client agent MUST be the component which performs attestation
+measurement checks.
+
+The Enarx client agent MAY pass attestation measurements to the Orchestrator.
+
+The Enarx client agent MUST NOT accept override instructions from the
+Orchestrator to proceed with deployment of a Tenant workload image in the
+case of an attestation measurement failure.
+
+The Tenant workload image MUST be encrypted under a unique session key.
+
 ## Reference
 
-rfc#00002
-rfc#00003
-rfc#00006
+rfc#0000x - Wasm RFC
+rfc#0000x - Trust domain intro
+rfc#0000x - Trust domains and Enarx
+rfc#0000x - Trust anchors and pivots
 [Define attestation database - issue #25](https://github.com/enarx/rfcs/issues/25)
 
 
@@ -319,13 +461,7 @@ n/a
 
 ## Unresolved questions
 
-- What parts of the design do you expect to resolve through the
-RFC process before this gets merged?
-- What parts of the design do you expect to resolve through the
-implementation of this feature before stabilization?
-- What related issues do you consider out of scope for this 
-proposal that could be addressed in the future independently of the
-solution that comes out of this doc?
+Several - see TODOs in main body.
 
 ## Implementations
 
