@@ -1,0 +1,13 @@
+digraph {
+    subgraph cluster_0 {
+        style=filled
+        color=lightgrey
+        assigned [shape=rectangle]
+        under_review [shape=rectangle]
+        done [shape=rectangle]
+        {
+            rank=same 
+            assigned -> under_review -> done
+        }
+    }
+}

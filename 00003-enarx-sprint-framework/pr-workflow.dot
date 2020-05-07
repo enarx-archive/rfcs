@@ -1,0 +1,37 @@
+digraph {
+    new_pr [shape=box style=rounded]
+    triage [shape=Msquare]
+    reviewer_assigned
+    reviewed
+    driveby [shape=box style=rounded]
+    reviewer_unassigned [shape=rectangle]
+    author_assigned
+    request_rereview [shape=rectangle]
+    "author_unassigned (cr == 0)" [shape=rectangle]
+    approved
+    "merged (approvals=reviews, reviews>1, tests_passed)" [shape=box style=rounded]
+    
+    
+
+    new_pr -> triage;
+    
+    triage -> reviewer_assigned;
+    
+    reviewer_assigned -> reviewed [label=review_submitted];
+    reviewer_assigned -> approved;
+    approved -> "merged (approvals=reviews, reviews>1, tests_passed)" [color=green];
+
+    reviewed -> reviewer_unassigned [color=green];
+    reviewer_unassigned -> author_assigned [color=green];
+    author_assigned -> request_rereview;
+    "author_unassigned (cr == 0)" -> reviewer_assigned [color=green];
+    request_rereview -> "author_unassigned (cr == 0)" [color=green];
+    
+    driveby -> reviewed;
+    
+    subgraph cluster_0 {
+        automatable [color=green]
+        style=filled
+        color=lightgrey
+    }
+}

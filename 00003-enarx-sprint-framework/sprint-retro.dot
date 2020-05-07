@@ -1,0 +1,14 @@
+digraph {
+    sprint_issue [shape=box style=rounded];
+    "associated pull request?" [shape=diamond]
+    planning [shape=Msquare]
+    "associated PR merged?" [shape=diamond]
+    keep [shape=box style=rounded]
+    done [shape=box style=rounded]
+    
+    sprint_issue -> "associated pull request?"
+    "associated pull request?" -> planning [label=no]
+    "associated pull request?" -> "associated PR merged?" [label=yes]
+    "associated PR merged?" -> keep [label=no]
+    "associated PR merged?" -> done [label=yes]
+}
