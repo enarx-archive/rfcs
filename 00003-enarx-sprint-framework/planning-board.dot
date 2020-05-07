@@ -1,0 +1,14 @@
+digraph {
+    subgraph cluster_0 {
+        style=filled
+        color=lightgrey
+        triage [shape=rectangle]
+        backlog [shape=rectangle]
+        nominated [shape=rectangle]
+        accepted [shape=rectangle]
+        {
+            rank=same 
+            triage -> backlog -> nominated -> accepted
+        }
+    }
+}

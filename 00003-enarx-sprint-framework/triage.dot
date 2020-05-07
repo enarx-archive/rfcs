@@ -1,0 +1,41 @@
+digraph {
+    new_issue [shape=box style=rounded];
+    urgent [shape=diamond color=red];
+    sprint [shape=box style=rounded];
+    backlog [shape=box style=rounded];
+    assigned [shape=rectangle color=blue];
+    label_issue [shape=rectangle color=blue];
+
+    new_issue -> label_issue;
+    label_issue -> urgent
+
+    urgent -> backlog [label=no];
+    urgent -> assigned [label=yes];
+    assigned -> sprint [color=green];
+    
+    {
+        rank=same;
+        urgent; assigned;
+    }
+    
+    {
+        rank=same;
+        new_issue; new_pr;
+    }
+    
+    new_pr [shape=box style=rounded]
+    label_pr [shape=rectangle color=blue]
+    
+    new_pr -> label_pr -> assigned
+    
+    subgraph cluster_0 {
+        style=filled
+        color=lightgrey
+        
+        developers [color=blue]
+        product_owners [color=red]
+        automatable [color=green]
+        
+        automatable -> product_owners -> developers [style=invis]
+    }
+}
