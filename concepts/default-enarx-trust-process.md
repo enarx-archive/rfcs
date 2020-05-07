@@ -23,16 +23,20 @@ implementations.
 
 One of the key aims of the Enarx project is to allow clients to run
 workloads on hosts which are "untrusted".  This RFC builds on previous
-RFCs to describe the default model by which Enarx allows this take
+RFCs to describe the default model by which Enarx allows this to take
 place, using the capabilities of TEEs, the underlying CPU(s) and
 firmware of the host and other parties.
 
 It should be noted that the key party for whom trust is considered
 important within the Enarx project is the workload owner - in this case,
-the tenant.  It is trust relationships from this entity to others, and
-maintenance of the tenant's trust domain, which are always the
-priority - any other benefits which may accrue to other parties, are
-considered side benefits.
+the tenant.  We should remember that all trust relationships are
+explicitly uni-directional (though this does not preclude a
+corresponding trust relationship in the other direction).  In the case
+of Enarx, it is trust relationships from the workload entity to other
+entities (primarily the host owner in this document), and maintenance
+of the tenant's trust domain, which are always the priority - any
+other benefits which may accrue to other parties, are considered
+side benefits.
 
 On a different note, this RFC deals mainly with the communications
 between the various Enarx components.  Although the Orchestrator is
@@ -57,7 +61,7 @@ Non-Enarx use cases were also discussed, but these are irrelevant to this
 discussion, and therefore ignored in this RFC.
 
 The changes between states were characterised as the transition of
-particular components between to host domains:
+particular components between trust domains:
  1. host owner trust domain;
  2. tenant trust domain.
 
@@ -217,7 +221,7 @@ is requested by the **Enarx host agent** and performed by the **host
 CPU + CPU firmware**.  The measurement is then transmitted from the
 **Enarx host agent** to the **Enarx client agent**.
 
-The **Enarx host agent** checks the attestation measurement database
+The **Enarx client agent** checks the attestation measurement database
 (TODO: defined in a separate RFC) to ensure that the attestation
 measurement is correct.  This process includes checks for:
 
@@ -233,14 +237,15 @@ error message to the Orchestrator.
 
 If the attestation measurement meets the checking criteria, the **Enarx
 client agent** retrieves or derives the session key from the previous
-communication (the exact mechanism being CPU architecture-dependent).  At
-this point, the state transition is considered complete, and the TEE
-instance, loaded with the Enarx runtime image, is now an **Empty Keep**,
-which includes a running **Enarx runtime instance**. 
+communication originating in the **host CPU + CPU firmware** (the exact
+mechanism being CPU architecture-dependent).  At this point, the state
+transition is considered complete, and the TEE instance, loaded with
+the Enarx runtime image, is now an **Empty Keep**, which includes a
+running **Enarx runtime instance**. 
 
 ### State 2->3 change
 
-#### State 2 - pre-attestation
+#### State 2 - attested
 
  - host owner trust domain
     - host
@@ -254,7 +259,7 @@ which includes a running **Enarx runtime instance**.
     - Tenant workload image
     - Tenant workload image repository
 
-#### State 3 - attested
+#### State 3 - provisioned
 
  - host owner trust domain
     - host
@@ -299,7 +304,6 @@ image**.
  communication to allow the **Orchestrator** to check that the message is
  a "success" and not a "failure": this is a measure to reduce sensitive
  information leakage in the event of implementation errors.
-
 
 The **Enarx client agent** gained access to a session key as part of the
 state 1->2 transition.  The **Tenant workload image** must be encrypted
@@ -367,8 +371,10 @@ Integrity protection of the request SHOULD be applied.
 
 The protocol handshake and further steps SHOULD be encrypted.
 
-If integrity protection is applied, all detected integrity failures SHOULD
-be reported to the Enarx client agent via the Enarx host agent where possible.
+If integrity protection is to the protocol handshake and further
+communications between the Enarx client agent and the Enarx host agent
+are applied, all detected integrity failures SHOULD be reported to
+the Enarx client agent via the Enarx host agent where possible.
 
 The integrity of the tenant's trust domain MUST always be given the
 highest priority.
