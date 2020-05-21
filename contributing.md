@@ -19,42 +19,32 @@ the right track.
 
 ### How to propose an RFC
 
-  1. Fork [the RFC repo](https://github.com/enarx/rfcs).
-  2. Choose a descriptive name for your RFC. Don't pick a number yet.
-  3. Decide which parent folder is appropriate for your RFC: `/features` or 
-    `/concepts`.
-    If it is about a specific protocol or decorator or feature, its parent
-    should be `/features`; if it is about a concept that will be used in many
-    different features, its parent should be `/concepts`.
-  4. Create a directory with the descriptive name you chose and copy
-    `00000-template.md` to `<parent>/<your descriptive RFC name>/README.md`.
-  5. Fill in the RFC (ie: fill README.md). [Use MUST and SHOULD per standard conventions](https://tools.ietf.org/html/rfc2119).
-    Please pay attention to details:
-    RFCs that do not present convincing motivation, demonstrate an
-    understanding of the impact of the design, or are disingenuous about the
-    drawbacks or alternatives tend to be poorly received. You can add
-    supporting artifacts, such as diagrams and sample data, in the RFC's folder.
-  6. When you are ready to publish your RFC, it is time to assign a number to
-    it. The RFC number will be the Github Pull Request number (with the the
-    necessary leading number of zeroes). To find this number, inspect open and
-    closed PRs in this repo to figure out what the next PR number will be.
-  7. Add the RFC number to your directory. Rename it from `<your descriptive RFC name>`
-    to `<your 5-digit number>-<your descriptive RFC name>`. Don't forget to
-    put the number at the top of your README.md: modify the title so it is in
-    the form `<your 5-digit number>: Friendly Version of Your Title`.  
-  8. Commit your changes.
-  9. Push your changes to your forked `rfcs` repo.
-  10. Submit a pull request from your forked repo to `enarx/rfcs`.
+#### Process
 
-A note on numbering: if need be, you can always create the PR to get the
-number and then modify your files to incorporate this number and push them
-again. Or just come talk to us. Don't let numbering get in the way of
-submitting an RFC.
+1. Fork [the RFC repo](https://github.com/enarx/rfcs).
+2. Choose a descriptive name for your RFC and note the next RFC number.
+3. Create a directory with the descriptive name you chose and copy
+   `template.md` to `<RFC#>-<your-descriptive-RFC-name>/README.md`.
+4. Fill in the RFC's README.md.
+5. Commit your changes.
+6. Push your changes to your forked `rfcs` repo.
+7. Submit a pull request from your forked repo to `enarx/rfcs`.
 
-Make sure that all of your commits conform to the license restrictions noted [below](#intellectual-rights).
+#### Contents
 
-Enarx maintainers  will check to see if the process has been followed, and request
-any process changes before merging the PR.
+Use MUST and SHOULD [per standard conventions](https://tools.ietf.org/html/rfc2119).
+
+Please pay attention to details: RFCs that do not present convincing
+motivation, demonstrate an understanding of the impact of the design, or are
+disingenuous about the drawbacks or alternatives tend to be poorly received.
+You can add supporting artifacts, such as diagrams and sample data, in the
+RFC's folder.
+
+Make sure that all of your commits conform to the license restrictions noted
+[below](#intellectual-rights).
+
+Enarx maintainers will check to see if the process has been followed, and
+request any process changes before merging the PR.
 
 When the PR is merged, your RFC is now formally in the PROPOSED state.
 
