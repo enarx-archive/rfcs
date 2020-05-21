@@ -1,10 +1,10 @@
 #!/bin/bash
 
-find */ -type f | sort -g -k2 -t/ | gawk '
+find */ -type f | sort -g | gawk '
 BEGIN { seq=0; status=0 }
 
 # Test the proper numbering of RFCs
-match($0, /^[a-z-]+\/([0-9]{5})-[a-z0-9-]+\/README.md$/, grp) {
+match($0, /^([0-9]{5})-[a-z0-9-]+\/README.md$/, grp) {
     if (seq++ != grp[1] + 0) {
         printf "%s should have RFC #%05d!\n", $0, seq - 1
         status=1
@@ -14,7 +14,7 @@ match($0, /^[a-z-]+\/([0-9]{5})-[a-z0-9-]+\/README.md$/, grp) {
 }
 
 # Allow some RFC-specific files
-/^[a-z-]+\/([0-9]{5})-[a-z0-9-]+\/[a-z0-9-]+.(png|svg)$/ {
+/^([0-9]{5})-[a-z0-9-]+\/[a-z0-9-]+.(png|svg)$/ {
     next
 }
 
