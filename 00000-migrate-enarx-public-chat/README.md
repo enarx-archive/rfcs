@@ -2,7 +2,8 @@
 - Authors: Mark Bestavros, Axel Simon
 - Status: [PROPOSED](/README.md#proposed)
 - Since: 2020-03-13
-- Status Note: Test Zulip and Rocket.Chat instances running and tested  
+- Status Note: Rocket.Chat has donated an instance to the Enarx project;
+  currently being trialed  
 - Supersedes: None
 - Start Date: 2020-03-06
 - Tags: chat app, outreach
@@ -323,6 +324,45 @@ unfortunately, is something we can only learn with experience.
 
 As discussed above, Rocket.Chat has an SLA, which makes this less of a concern
 for it.
+
+## Implementations
+
+Thanks to the generosity of Rocket.Chat, the Enarx project now has its own
+hosted Rocket.Chat server available at [`chat.enarx.io`](https://chat.enarx.io).
+Given the research done in the process of making this document, the team's
+consensus seems to be that Rocket is the preferred option, and we should move
+towards making it our default.
+
+### Migration process
+
+With a server active, the first step of the migration process should be to
+configure the app -- in particular:
+
+- ensure it is available at `chat.enarx.io`
+- ensure that end-to-end encryption channels are available for vulnerability
+  disclosure
+- enable Github OAuth login
+- develop and trial the new-user process
+- create a a starting set of channels
+
+Once configured, the core team should trial the setup full-time for a full
+working week. This will allow the administrators to deal with any issues before
+the general public encounters them. However, during this trial period, it will
+be important to simultaneously monitor the Gitter chat to ensure non-core
+contributors (or anyone else asking questions there) get their questions
+answered.
+
+Finally, and only after the full-time trial is complete, we will officially
+migrate Enarx's chat app to the Rocket.Chat instance. To do this, we will:
+
+- Create announcement messages in all our Gitter channels, mentioning all users,
+  that we have migrated to Rocket.Chat, available at our canonical chat URL.
+- Update the links to our chat on our wiki, README, etc. to point to the new URL
+- (Optional) Implement a bot that sends periodic reminders to the channel that
+  we have moved, or automatically responds when a new message arrives to the
+  channel with the new link
+
+From there, the transition will be complete.
 
 ## Future Possibilities
 
