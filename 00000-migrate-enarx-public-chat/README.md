@@ -1,6 +1,6 @@
 # 00000-migrate-enarx-public-chat
 - Authors: Mark Bestavros, Axel Simon
-- Status: [DEMONSTRATED](/README.md#demonstrated)
+- Status: [ACCEPTED](/README.md#accepted)
 - Since: 2020-03-13
 - Status Note: Rocket.Chat has donated an instance to the Enarx project;
   currently being trialed  
