@@ -15,7 +15,9 @@ notice its shortcomings, and believe it will not meet our needs as we scale.
 This RFC proposes that we switch our public chat app to another more
 feature-rich and better-organized open-source alternative. We have experimented
 with Rocket.Chat and Zulip, and have evaluated several other alternatives; at
-the present time, we believe that Rocket.Chat is the best option.
+the present time, we believe that Rocket.Chat is the best option. We are
+currently trialing a hosted Rocket.Chat instance; that can be found
+[here](https://chat.enarx.io). 
 
 ## Motivation
 
@@ -31,7 +33,7 @@ and Rocket.Chat. Here is a tutorial as if each one was selected as our chat app.
 ### As if Rocket.Chat is set up as our default chat app:
 
 Enarx's public chat lives on Rocket.Chat. If you'd like to see what we're
-talking about, check out `<public-chat-link>`. You'll be able to see what we're
+talking about, check out `https://chat.enarx.io`. You'll be able to see what we're
 talking about right away; all our conversations take place in the public, and
 you don't need a login to browse around.
 
