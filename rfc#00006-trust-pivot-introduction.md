@@ -1,7 +1,7 @@
 # 00006 Trust anchors and pivots
 - Authors: [Mike Bursell](mike@p2ptrust.org)
 - Status: [PROPOSED](/README.md#proposed)
-- Since: 2020-03-09 (date you submit your PR)
+- Since: 2020-03-09
 - Status Note: discussion
 - Supersedes: n/a
 - Start Date: 2020-03-16 
@@ -53,16 +53,20 @@ endorsing authority in this case).
 ### Trust pivot
 A trust pivot is a component (or set of components) and associated
 process (that is, algorithm, rather than necessarily executing
-process) which allows a trust relationship from one entity to
-another to be transferred, or added, to another entity.  The
-validity of the pivot assumes the existence of one or more trust
-anchors.  The concept of a trust pivot is new, and two
-examples may help explain it.
+process) which allows a trust relationship from one entity (trustor
+A) to another (trustee X) to be transferred, or added, to
+another entity (trustor B), so that trustor B now has the trust
+relationship to trustee X.  The validity of the pivot assumes
+the existence of one or more trust anchors.  The concept of a
+trust pivot is new, and two examples may help explain it.
 
 #### A will as a trust pivot
 A will (as in "last will and testament") provides a legal
 mechanism whereby the ownership and management of property can
-be passed from one person to another.  (Note: "Trusts" are
+be passed from one person to another.  In this case, the trust
+pivot is the will itself, the trust anchor is the legal recognition
+by the state of the validity of properly created and registered wills,
+and the endorsing authority is the state.  (Note: "Trusts" are
 another mechanism, but the name is somewhat confusing in this
 context!).
 
@@ -77,14 +81,7 @@ aspects of the attestation.
 
 ## Reference
 
-Provide guidance for implementers, procedures to inform testing,
-interface definitions, formal function prototypes, error codes,
-diagrams, and other technical details that might be looked up.
-Strive to guarantee that:
-
-- Interactions with other features are clear.
-- Implementation trajectory is well defined.
-- Corner cases are dissected by example.
+n/a
 
 ## Drawbacks
 
