@@ -120,23 +120,41 @@ check it very carefully.
 The changes between state 0 and state 1 are the creation of a TEE instance
 and the loading of the Enarx runtime image into that instance.
 
+Note that the **Enarx host agent**, which is considered as a single component
+in this document for the purposes of trust domain discusions, can be further
+decomposed into the following components:
+ - Keep manager
+   - one per host (future trust models might allow more than one per host)
+   - keeps track of all Keeps on the host
+   - launches Keep loader components (see below)
+   - may persist state to allow recovery, or poll existing Keeps if required
+ - Keep loader
+   - one per Keep
+   - lifespan coterminous with the Keep it manages
+   - causes the creation of the **TEE instance**
+   - loads **Enarx runtime instance** into **TEE instance**
+   - creates a Main loop component
+ - Main loop
+   - one per Keep
+   - lifespan cotermnous with the Keep it services
+   - provides the syscall processing from outside the Keep
+
 The initialisation of the process is prompted by the **Orchestrator**, which
 communicates with the **Enarx client agent**, which contacts the **Enarx
 host agent** over a network connection (which does not need to be
-encrypted, as no confidential data is passed across it, as because the
-**Enarx host agent** is not a trusted entity (part of the **tenant host
-domain** anyway).  A mechanism (such as a cryptographic nonce), allowing the
-Enarx client agent to match sessions and requests, is included in the
+encrypted, as no confidential data is passed across it, because the
+**Enarx host agent** is not a trusted entity - as it is part of the **tenant
+host domain** - anyway. A mechanism (such as a cryptographic nonce), allowing
+the Enarx client agent to match sessions and requests, is included in the
 initial request.  The **Enarx host agent** then requests the creation,
 which is performed by the **host CPU + CPU firmware**.
 
 The **Enarx runtime image** is typically stored on host storage (local or
 remote - the distinction is not relevant to the process).  The loading
-process varies between architectures (TODO: is this true?), but is
-requested by the **Enarx host agent**.  Although the initial image may
-persist on host storage, there is no requirement for or against this,
-and so the component is not listed separately in state 1.  We follow
-this convention for later states.
+process varies between architectures, but is requested by the **Enarx
+host agent**.  Although the initial image may persist on host storage,
+there is no requirement for or against this, and so the component is not
+listed separately in state 1.  We follow this convention for later states.
 
 Once the **TEE instance** has been created, the **host CPU + CPU firmware**
 load the **Enarx runtime image** into the **TEE instance**.  The
@@ -157,14 +175,14 @@ Though the encryption of the channel between the Enarx client agent
 and the Enarx host agent is not **required**, the following properties are
 considered to be **desirable**:
 
- - authentication of the Enarx client agent to the Enarx host agent
+ - authorisation of the Enarx client agent to the Enarx host agent
    - this allows the host to control which parties are permitted to create
    Enarx Keeps.  While this has no direct benefit to the tenant, an
    indirect benefit may be that the host can avoid DoS attacks, thereby
    maintaining availability for workload placement and execution.
    - note that the Enarx host agent is *not* trusted by the tenant, and
    it is therefore the responsibility of the host to decide whether to
-   trust any such authentication.
+   trust any such authorisation.
  - integrity of the request
    - some DoS attacks or protocol attacks may be feasible, and mitigated
    by integrity protection.
@@ -220,8 +238,9 @@ CPU + CPU firmware**.  The measurement is then transmitted from the
 **Enarx host agent** to the **Enarx client agent**.
 
 The **Enarx client agent** checks the attestation measurement database
-(TODO: defined in a separate RFC) to ensure that the attestation
-measurement is correct.  This process includes checks for:
+(see (Issue #25)[https://github.com/enarx/rfcs/issues/25]) to ensure
+that the attestation measurement is correct.  This process includes checks
+for:
 
  - host CPU + CPU firmware validity
  - cryptographic correctness
@@ -298,7 +317,7 @@ image**.
  - In the case of 3. above, the **Enarx client agent** contacts the
  **Orchestrator**, providing attestation measurement check status
  information, and receives the **tenant workload image** from the
- **Orchestrator**.  Note that explicit approval should be included in the
+ **Orchestrator**.  Note that explicit approval may be included in the
  communication to allow the **Orchestrator** to check that the message is
  a "success" and not a "failure": this is a measure to reduce sensitive
  information leakage in the event of implementation errors.
@@ -307,19 +326,12 @@ The **Enarx client agent** gained access to a session key as part of the
 state 1->2 transition.  The **tenant workload image** must be encrypted
 under this session key to be transmitted to the **Empty Keep**.
 
-TODO: check this - particularly authentication pieces.
 At some point in the process (undefined in this document), the **Enarx
 client agent** was provided with sufficient information to contact what is
-now the **Empty Keep**.  This may have been via set-up information from
-the **Orchestrator**, as part of the communications with the **Enarx host
-agent**, or via "call-back" from the **Empty Keep**: in the latter case,
-the **Enarx client agent** must be certain (through cryptographic
-authentication) that the **Empty Keep** is the expected entity.  This may
-be achieved by the injection of authentication material into the **Empty
-Keep** at provision-time, but this must then be tied to the attestation
-measurement, and unique to each **Empty Keep** instance.  The session key
-established in the state 1->2 transition may be sufficient for this
-purpose.
+now the **Empty Keep**, into which authorisation material was injected at
+provision-time.  This material must then be tied to the attestation
+measurement, and unique to each **Empty Keep** instance. The session key
+established in the state 1->2 transition may be sufficient for this purpose.
 
 The **Enarx client agent** now creates an encrypted communications channel
 to the **Empty Keep**, using the session key established in the state 1->2
@@ -332,38 +344,10 @@ a **Provisioned Keep**.
 
 
 ## Requirements
-### General requirements
-TODO: these requirements seem general to the project, and probably
-deserve their own RFC.  
-
-The security of the tenant (workload owner) MUST always be considered
-paramount when considering designs and implementations of Enarx
-components, protocols or other artifacts.
-
-When a trade-off between the security of the tenant and workload needs
-to be made against the security of any other party (including host owner),
-the security of the tenant MUST always win.
-
-When measures for a party other than the tenant are being considered,
-the general principle should be to choose the highest levels of security,
-but any choices MUST NOT compromise tenant security. 
-
-The tenant workload MUST never be unencrypted on the network (in transit)
-within the Enarx-managed process.
-
-The tenant workload MUST never be unencrypted in storage once it has been
-transmitted by the Enarx client agent.
-
-The tenant workload MUST never be unencrypted in RAM once it has been
-transmitted by the Enarx client agent.
-
-The tenant workload MUST never be available in unencrypted form on the host.
-
-### Other requirements
 The channel between the Enarx client agent and the Enarx host agent MAY be
 encrypted.
 
-The Enarx client agent SHOULD authenticate to the Enarx host agent.
+The Enarx client agent SHOULD be authorised to the Enarx host agent.
 
 Integrity protection of the request SHOULD be applied.
 
@@ -465,7 +449,7 @@ n/a
 
 ## Unresolved questions
 
-Several - see TODOs in main body.
+See Future Possibilities section
 
 ## Implementations
 
@@ -473,6 +457,18 @@ None.
 
 ## Future Possibilities
 
-- Threat models should be documented and published as RFCs (Issue #240)[https://github.com/enarx/enarx/issues/240]
-- Status of hardware/firmware in trust relationships in Enarx
+ - Alternative mechanisms for providing the **Enarx client agent** with
+sufficient information to contact the **Empty Keep** should be described
+and considered.  Options include:
+   - via set-up information from the **Orchestrator**, as part of the
+  communications with the **Enarx host agent** (the canonical case for the
+  default process described in this document).
+   - via "call-back" from the **Empty Keep**.
+ - In the latter case, the **Enarx client agent** must be certain (through
+cryptographic authentication) that the **Empty Keep** is the expected
+entity.  
+
+ - Options for managing key rotation for long-running Keep instances
+ - Threat models should be documented and published as RFCs (Issue #240)[https://github.com/enarx/enarx/issues/240]
+ - Status of hardware/firmware in trust relationships in Enarx
 needs to be documented (Issue #193)[https://github.com/enarx/enarx/issues/193]
