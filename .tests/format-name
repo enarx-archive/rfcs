@@ -1,0 +1,27 @@
+#!/bin/bash
+
+find */ -type f | sort -g | gawk '
+BEGIN { seq=0; status=0 }
+
+# Test the proper numbering of RFCs
+match($0, /^([0-9]{5})-[a-z0-9-]+\/README.md$/, grp) {
+    if (seq++ != grp[1] + 0) {
+        printf "%s should have RFC #%05d!\n", $0, seq - 1
+        status=1
+    }
+
+    next
+}
+
+# Allow some RFC-specific files
+/^([0-9]{5})-[a-z0-9-]+\/[a-z0-9-]+.(png|svg)$/ {
+    next
+}
+
+{
+    printf "%s is an unexpected filename!\n", $0
+    status=1
+}
+
+END { exit status }
+'
