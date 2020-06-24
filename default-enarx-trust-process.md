@@ -121,7 +121,7 @@ The changes between state 0 and state 1 are the creation of a TEE instance
 and the loading of the Enarx runtime image into that instance.
 
 Note that the **Enarx host agent**, which is considered as a single component
-in this document for the purposes of trust domain discusions, can be further
+in this document for the purposes of trust domain discussions, can be further
 decomposed into the following components:
  - Keep manager
    - one per host (future trust models might allow more than one per host)
@@ -136,7 +136,7 @@ decomposed into the following components:
    - creates a Main loop component
  - Main loop
    - one per Keep
-   - lifespan cotermnous with the Keep it services
+   - lifespan coterminous with the Keep it services
    - provides the syscall processing from outside the Keep
 
 The initialisation of the process is prompted by the **Orchestrator**, which
@@ -324,7 +324,11 @@ image**.
 
 The **Enarx client agent** gained access to a session key as part of the
 state 1->2 transition.  The **tenant workload image** must be encrypted
-under this session key to be transmitted to the **Empty Keep**.
+under this session key to be transmitted to the **Empty Keep**.  (Note that
+the session key is expected to be coterminous with the Keep in the default
+trust model: **tenant workload images** are provided by the Orchestrator,
+and while the same **tenant workload image** may be used for multiple
+Keeps, each instance will be transmitted under a separate session key.)
 
 At some point in the process (undefined in this document), the **Enarx
 client agent** was provided with sufficient information to contact what is
