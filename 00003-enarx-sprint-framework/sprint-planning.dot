@@ -1,0 +1,58 @@
+
+digraph G {
+    subgraph cluster_0 {
+        developers [color=blue]
+        product_owners [color=red]
+        style=filled
+        color=lightgrey
+    }
+    
+    newly_filed_issue [shape=box style=rounded];
+    unstarted_sprint_issue [shape=box style=rounded];
+    
+    triage [shape=Msquare];
+    
+    debrief [shape=Msquare]
+    
+    backlog
+    
+    proposed
+    
+    newly_filed_issue -> triage
+    triage -> backlog
+    
+    unstarted_sprint_issue -> debrief
+    debrief -> proposed
+    
+    
+    "nomination" [shape=rectangle color=blue]
+    
+    
+    backlog -> "nomination" -> proposed
+    
+    
+    "prioritized?" [shape=diamond color=red]
+    
+    proposed -> "prioritized?"
+    "prioritized?" -> backlog [label=no]
+    
+    accepted
+    
+    "prioritized?" -> accepted [label=yes]
+    
+    assigned
+    
+    sprint [shape=box style=rounded]
+    
+    "has volunteer?" [shape=diamond color=blue]
+    
+    
+    
+    accepted -> "has volunteer?"
+    
+    "has volunteer?" -> assigned [label=yes]
+    
+    "has volunteer?" -> backlog [label=no]
+    
+    assigned -> sprint [color=green]
+}

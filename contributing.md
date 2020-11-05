@@ -11,11 +11,10 @@ changes are not RFC-worthy.
 ### Preparation
 
 Before writing an RFC, consider exploring the idea on the
-[chat](https://gitter.im/enarx/community), on a daily meeting call
-(see the [wiki page on contributing](
-https://github.com/enarx/enarx/wiki/How-to-contribute),
-Encouraging feedback from maintainers is a good sign that you're on
-the right track.
+[chat](https://chat.enarx.dev) or on a daily meeting call (see the [wiki page on
+contributing](https://github.com/enarx/enarx/wiki/How-to-contribute)).
+Encouraging feedback from maintainers is a good sign that you're on the right
+track.
 
 ### How to propose an RFC
 
@@ -28,7 +27,12 @@ the right track.
 4. Fill in the RFC's README.md.
 5. Commit your changes.
 6. Push your changes to your forked `rfcs` repo.
-7. Submit a pull request from your forked repo to `enarx/rfcs`.
+7. Submit a pull request from your forked repo to `enarx/rfcs`. Please make 
+   sure your pull request uses the same title as your RFC, for consistency.
+
+Should you need help with the Git forking and pull request mechanism, please
+refer to our
+[documentation](https://github.com/enarx/enarx/wiki/How-to-contribute:-Pull-Request-process)
 
 #### Contents
 
@@ -46,6 +50,16 @@ Make sure that all of your commits conform to the license restrictions noted
 Enarx maintainers will check to see if the process has been followed, and
 request any process changes before merging the PR.
 
+#### Example
+- I fork the repo and make a note of the number of latest RFC to have been
+ added to it, say 0010.
+- I chose as a descriptive RFC name, "My Great RFC".
+- This gives me a directory name of `0011-my-great-rfc`.
+- I copy 00000-template to `./0011-my-great-rfc/README.md` and start editing it.
+- In README.md, the title I use is "0011: My Great RFC".
+- When ready to publish, I commit, push and submit a pull request.
+
+
 When the PR is merged, your RFC is now formally in the PROPOSED state.
 
 ### Changing an RFC Status
@@ -59,7 +73,7 @@ characteristics:
   - Example: `Status to Accepted, deadline 2019-08-15, RFC 0095-basic-message`
 - The PR comment should document why the status is being changed.
 - The deadline date should be 2 weeks after announcing the proposed status
-  change on an Enarx call. The PR should also be announced on the [chat](https://gitter.im/enarx/community).
+  change on an Enarx call. The PR should also be announced on the [chat](https://chat.enarx.dev).
 - Barring negative feedback from the community, the repo's maintainers should
   merge the PR after the deadline.
 - The deadline should be moved by two weeks after addressing each substantive
@@ -68,24 +82,27 @@ characteristics:
 
 ### How to get an RFC demonstrated
 
-If your RFC is a feature, it's common (though not strictly required) for
-it to go to a DEMONSTRATED state next. Write some code that embodies the
-concepts in the RFC. Publish the code. Then [submit a PR](#changing-an-rfc-status)
-that adds your early implementation to the [Implementations section](/00000-template.md#implementations),
-and that changes the status to DEMONSTRATED. These PRs should be accepted
-immediately, as long as all tests pass.
+If your RFC is a feature, it's common (though not strictly required) for it to
+go to a DEMONSTRATED state next. Write some code that embodies the concepts in
+the RFC. Publish the code. Then [submit a PR](#changing-an-rfc-status) that adds
+your early implementation to the [Implementations
+section](/00000-template.md#implementations), and that changes the status to
+DEMONSTRATED. These PRs should be accepted immediately, as long as all tests
+pass.
 
 ### How to get an RFC accepted
 
 After your RFC is merged and officially acquires the [PROPOSED status](
-README.md#status--proposed), the RFC will receive feedback from the larger community,
-and the author should be prepared to revise it. Updates may be made via pull request,
-and those changes will be merged as long as the process is followed.
+README.md#status--proposed), the RFC will receive feedback from the larger
+community, and the author should be prepared to revise it. Updates may be made
+via pull request, and those changes will be merged as long as the process is
+followed.
 
 When you believe that the RFC is mature enough (feedback is somewhat resolved,
-consensus is emerging, and implementation against it makes sense), [submit a PR](#changing-an-rfc-status) that
-changes the status to [ACCEPTED](README.md#status--accepted). The status change PR
-will remain open until the maintainers agree on the status change.
+consensus is emerging, and implementation against it makes sense), [submit a
+PR](#changing-an-rfc-status) that changes the status to
+[ACCEPTED](README.md#status--accepted). The status change PR will remain open
+until the maintainers agree on the status change.
 
 ### How to get an RFC adopted
 
@@ -104,8 +121,7 @@ community is friendly to the idea, the doc will enter a two-week
 
 ### Intellectual Rights
 
-This repository is licensed under an [Apache 2.0 License](LICENSE).
-This means that any contributions you make must be licensed in an
-Apache-2-compatible way, and must be free from patent encumbrances or
-additional terms and conditions. By raising a PR, you certify that this is
-the case for your contribution.
+This repository is licensed under an [Apache 2.0 License](LICENSE). This means
+that any contributions you make must be licensed in an Apache-2-compatible way,
+and must be free from patent encumbrances or additional terms and conditions. By
+raising a PR, you certify that this is the case for your contribution.

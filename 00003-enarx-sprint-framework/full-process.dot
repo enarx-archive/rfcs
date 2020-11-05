@@ -1,0 +1,18 @@
+digraph {
+    filed [shape=box style=rounded];
+    triage [shape=Msquare];
+    backlog
+    planning [shape=Msquare]
+    debrief [shape=Msquare]
+    sprint [shape=rectangle]
+    done [shape=box style=rounded];
+
+    filed -> triage
+    triage -> backlog
+    triage -> sprint [label=high_priority]
+    backlog -> planning
+    planning -> sprint
+    sprint -> debrief
+    debrief -> planning [label=unstarted_issues]
+    debrief -> done
+}

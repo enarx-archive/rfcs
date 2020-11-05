@@ -14,7 +14,7 @@ match($0, /^([0-9]{5})-[a-z0-9-]+\/README.md$/, grp) {
 }
 
 # Allow some RFC-specific files
-/^([0-9]{5})-[a-z0-9-]+\/[a-z0-9-]+.(png|svg)$/ {
+/^([0-9]{5})-[a-z0-9-]+\/[a-z0-9-]+.(png|svg|dot)$/ {
     next
 }
 
