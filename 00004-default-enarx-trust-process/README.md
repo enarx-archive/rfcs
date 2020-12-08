@@ -432,7 +432,7 @@ of an attestation measurement failure.
 ## Reference
 
 rfc#0000x - Wasm RFC  
-rfc#0000x - Trust domain intro  
+rfc#00005 - Trust domain introduction  
 rfc#0000x - Trust domains and Enarx  
 rfc#0000x - Trust anchors and pivots  
 [Define attestation database - issue #25](https://github.com/enarx/rfcs/issues/25)
