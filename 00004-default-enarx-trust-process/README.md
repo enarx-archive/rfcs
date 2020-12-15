@@ -5,7 +5,7 @@
 - Status Note: under discussion
 - Start Date: 2020-03-17
 - Tags: trust
-- Addresses: (Issue #5)[https://github.com/enarx/rfcs/issues/5]
+- Addresses: [Issue #5](https://github.com/enarx/rfcs/issues/5)
 
 ## Summary
 
@@ -226,7 +226,7 @@ firmware**.  The measurement is then transmitted by the **Enarx host agent** to
 the **Enarx client agent**.
 
 The **Enarx client agent** checks the attestation measurement database (see
-[Issue #25](https://github.com/enarx/rfcs/issues/25) to ensure that the
+[Issue #25](https://github.com/enarx/rfcs/issues/25)) to ensure that the
 attestation measurement is correct.  This process includes checks for:
 
  - host CPU + CPU firmware validity
@@ -432,7 +432,7 @@ of an attestation measurement failure.
 ## Reference
 
 rfc#0000x - Wasm RFC  
-rfc#00005 - Trust domain introduction  
+[rfc#00005 - Trust domain introduction](https://github.com/enarx/rfcs/tree/master/00005-trust-domain-introduction)  
 rfc#0000x - Trust domains and Enarx  
 rfc#0000x - Trust anchors and pivots  
 [Define attestation database - issue #25](https://github.com/enarx/rfcs/issues/25)
@@ -470,7 +470,7 @@ None.
  - In the latter case, the **Enarx client agent** must be certain (through
    cryptographic authentication) that the **Empty Keep** is the expected entity.
  - Options for managing key rotation for long-running Keep instances
- - Threat models should be documented and published as RFCs (Issue
-   #240)[https://github.com/enarx/enarx/issues/240]
+ - Threat models should be documented and published as RFCs [Issue
+   #240](https://github.com/enarx/enarx/issues/240)
  - Status of hardware/firmware in trust relationships in Enarx needs to be
-   documented (Issue #193)[https://github.com/enarx/enarx/issues/193]
+   documented [Issue #193](https://github.com/enarx/enarx/issues/193)
